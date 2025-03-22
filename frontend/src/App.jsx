@@ -4,12 +4,14 @@ import './App.css'
 import Home from './pages/Home/Home'
 import Signup from './pages/Signup/Signup'
 import Login from './pages/Login/Login'
+import Navbar from './components/Navbar'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <BrowserRouter>
+    <Navbar />
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/signup" element={<Signup />}/>
