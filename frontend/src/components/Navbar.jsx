@@ -4,6 +4,11 @@ import Profileinfo from './Cards/Profileinfo'
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("")
+  const handleSeacrh = ()=>{}
+
+  const onClearSearch = ()=>{
+    setSearchQuery("")
+  }
   return (
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
       <h2 className='text-xl font-medium text-black py-2'>
@@ -13,7 +18,9 @@ const Navbar = () => {
 
       <Searchbar 
         value={searchQuery}
-
+        onChange={({target})=> setSearchQuery(target.value)}
+        handleSeacrh={handleSeacrh}
+        onClearSearch={onClearSearch}
       />
       <Profileinfo />
     </div>
