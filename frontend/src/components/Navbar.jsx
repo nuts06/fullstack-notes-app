@@ -1,13 +1,24 @@
 import React, {useState} from 'react'
 import Searchbar from './Searchbar/Searchbar'
 import Profileinfo from './Cards/Profileinfo'
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("")
-  const handleSeacrh = ()=>{}
+  const [buttonText, setButtontext] = useState('Logout')
+  const navigate = useNavigate()
+  const handleSeacrh = ()=>{
+    alert("Searched")
+  }
 
   const onClearSearch = ()=>{
     setSearchQuery("")
+  }
+
+  const onLogout  = () =>{
+    navigate('/login')
+    setButtontext("Login")
+    
   }
   return (
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
@@ -22,7 +33,10 @@ const Navbar = () => {
         handleSeacrh={handleSeacrh}
         onClearSearch={onClearSearch}
       />
-      <Profileinfo />
+      <Profileinfo 
+        onLogout={onLogout}
+        Buttontext={buttonText}
+      />
     </div>
   )
 }
