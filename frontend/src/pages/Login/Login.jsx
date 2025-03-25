@@ -52,7 +52,7 @@ const Login = () => {
           />
           {passwordError && <p className='text-red-500 text-sm pb-1'>{passwordError}</p>}
 
-          <button type='submit' className='btn-primary mt-4 h-10 '>Login</button>
+          <button type='submit' disabled={!email || !password} className={`btn-primary mt-4 h-10 ${(!email || !password) ? 'opacity-50 cursor-not-allowed' : ''}`}>Login</button>
           <p className='text-sm text-center mt-4'>Not Registered Yet? {" "}<Link to={"/signup"} className='font-medium underline text-[#2B85FF]'>Create an account</Link></p>
         </form>
       </div>
