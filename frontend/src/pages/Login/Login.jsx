@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Password from '../../components/input/Password'
 import {Link} from "react-router-dom"
+import { validateEmail } from '../../utils/helper'
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -8,7 +9,7 @@ const Login = () => {
   const [error, setError] = useState("")
 
   const handleLogin = async(e) =>{
-    e.preventDeafault()
+    e.preventDefault()
 
     if(!validateEmail(email)){
       setError("Please enter a valid email address")
@@ -16,7 +17,11 @@ const Login = () => {
     }
     if(!password){
       setError("Please enter the password")
+      return
     }
+
+    setError("")
+    // LoginAPI
   }
   return (
     <div className='flex items-center justify-center mt-28 '>
@@ -33,7 +38,9 @@ const Login = () => {
           <Password 
             password={password}
             setPassword={setPassword}
+            onChange={(e)=>setPassword(e.target.value)}
           />
+          {error && <p className='text-red-500 text-sm pb-1'>{error}</p>}
 
           <button type='submit' className='btn-primary mt-4 h-10 '>Login</button>
           <p className='text-sm text-center mt-4'>Not Registered Yet? {" "}<Link to={"/signup"} className='font-medium underline text-[#2B85FF]'>Create an account</Link></p>
