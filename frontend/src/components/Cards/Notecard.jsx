@@ -1,26 +1,25 @@
 import React from 'react'
-import { MdOutlinePushPin, MdCreate, MdDelete } from "react-icons/md"
+import { MdOutlinePushPin, MdCreate, MdDelete, MdAdd } from "react-icons/md"
 
-const Notecard = ({isPinned, handlePinNote, content, handleEdit, handleDelete}) => {
+const Notecard = ({isPinned, handlePinNote, content, handleEdit, handleDelete, tags, date, title}) => {
   return (
-    <div>
+    <>
+    <div className='border rounded p-4 bg-white hover:shadow-2xl transition-all ease-in-out cursor-pointer' >
         <div className='flex items-center justify-between'>
             <div >
-                <h6 className='text-sm font-medium'>Wake Up at 6 AM</h6>
-                <span className='text-sm text-green-700 '>26th March, 2025</span>
+                <h6 className='text-sm font-medium'>{title}</h6>
+                <span className='text-xs text-green-700 '>{date}</span>
             </div>
             <MdOutlinePushPin 
                 className={`icon-btn ${isPinned ? "text-[#2B85FF]" : "text-slate-300"}`}
                 onClick={handlePinNote}
             />
         </div>
-        <p className='text-xs text-slate-600 mt-2'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus ex odit earum alias harum, nisi, iste eius dignissimos blanditiis qui in? Dolorem in id earum sequi veritatis doloribus sunt totam.
-        Velit commodi veniam quisquam itaque assumenda quam fuga sed vitae corrupti ad? Fugiat, esse error commodi iste laboriosam rerum, asperiores quo unde voluptatum, quae adipisci similique incidunt aliquid tempora vitae!
-        Recusandae </p>
+        <p className='text-xs text-slate-600 mt-2'>{content?.slice(0,60)}</p>
 
         {/* for tags */}
         <div className='flex items-center justify-between mt-2'>
-          <div className='text-xs text-slate-500'>#tags</div>
+          <div className='text-xs text-slate-500'>#{tags}</div>
           <div className='flex items-center gap-2'>
             <MdCreate 
               className='icon-btn hover:text-green-600'
@@ -32,8 +31,12 @@ const Notecard = ({isPinned, handlePinNote, content, handleEdit, handleDelete}) 
             />
           </div>
         </div>
-
     </div>
+    {/* add button */}
+    <button className='w-16 h-16 flex items-center justify-center rounded-2xl bg-[#2B85FF] hover:bg-blue-600 absolute right-10 bottom-10 cursor-pointer'>
+      <MdAdd className='text-[32px] text-white'/>
+    </button>
+    </>
   )
 }
 
