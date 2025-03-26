@@ -1,7 +1,7 @@
 import React from 'react'
-import { MdOutlinePushPin } from "react-icons/md"
+import { MdOutlinePushPin, MdCreate, MdDelete } from "react-icons/md"
 
-const Notecard = ({isPinned, handlePinNote, content}) => {
+const Notecard = ({isPinned, handlePinNote, content, handleEdit, handleDelete}) => {
   return (
     <div>
         <div className='flex items-center justify-between'>
@@ -16,13 +16,23 @@ const Notecard = ({isPinned, handlePinNote, content}) => {
         </div>
         <p className='text-xs text-slate-600 mt-2'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus ex odit earum alias harum, nisi, iste eius dignissimos blanditiis qui in? Dolorem in id earum sequi veritatis doloribus sunt totam.
         Velit commodi veniam quisquam itaque assumenda quam fuga sed vitae corrupti ad? Fugiat, esse error commodi iste laboriosam rerum, asperiores quo unde voluptatum, quae adipisci similique incidunt aliquid tempora vitae!
-        Recusandae 
-        </p>
+        Recusandae </p>
 
         {/* for tags */}
         <div className='flex items-center justify-between mt-2'>
           <div className='text-xs text-slate-500'>#tags</div>
+          <div className='flex items-center gap-2'>
+            <MdCreate 
+              className='icon-btn hover:text-green-600'
+              onClick={handleEdit}
+            />
+            <MdDelete 
+              className="icon-btn hover:text-red-600"
+              onClick={handleDelete}
+            />
+          </div>
         </div>
+
     </div>
   )
 }
