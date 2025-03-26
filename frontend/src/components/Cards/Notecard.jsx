@@ -1,7 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { MdOutlinePushPin, MdCreate, MdDelete, MdAdd } from "react-icons/md"
 
 const Notecard = ({isPinned, handlePinNote, content, handleEdit, handleDelete, tags, date, title}) => {
+  const [addModal, setAddModal] = useState(false)
+  const modelOpen = () =>{
+    alert("button clicked")
+  }
   return (
     <>
     <div className='border rounded p-4 bg-white hover:shadow-2xl transition-all ease-in-out cursor-pointer' >
@@ -33,9 +37,12 @@ const Notecard = ({isPinned, handlePinNote, content, handleEdit, handleDelete, t
         </div>
     </div>
     {/* add button */}
-    <button className='w-16 h-16 flex items-center justify-center rounded-2xl bg-[#2B85FF] hover:bg-blue-600 absolute right-10 bottom-10 cursor-pointer'>
+    <button className='w-16 h-16 flex items-center justify-center rounded-2xl bg-[#2B85FF] hover:bg-blue-600 absolute right-10 bottom-10 cursor-pointer' onClick={modelOpen}>
       <MdAdd className='text-[32px] text-white'/>
     </button>
+    {/* {addModal && <AddNotes 
+      setAddModal={setAddModal}
+    />} */}
     </>
   )
 }
