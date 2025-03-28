@@ -1,8 +1,13 @@
 import React, {useState} from 'react'
 import { MdOutlinePushPin, MdCreate, MdDelete, MdAdd } from "react-icons/md"
+import Modal from "react-modal"
 
 const Notecard = ({isPinned, handlePinNote, content, handleEdit, handleDelete, tags, date, title}) => {
-  const [addModal, setAddModal] = useState(false)
+  const [openAddEditModal, setOpenAddEditModal] = useState({
+    isShown: false,
+    type:'add',
+    data:null
+  })
   const modelOpen = () =>{
     alert("button clicked")
   }
@@ -37,12 +42,26 @@ const Notecard = ({isPinned, handlePinNote, content, handleEdit, handleDelete, t
         </div>
     </div>
     {/* add button */}
-    <button className='w-16 h-16 flex items-center justify-center rounded-2xl bg-[#2B85FF] hover:bg-blue-600 absolute right-10 bottom-10 cursor-pointer' onClick={modelOpen}>
+    <button className='w-16 h-16 flex items-center justify-center rounded-2xl bg-[#2B85FF] hover:bg-blue-600 absolute right-10 bottom-10 cursor-pointer' onClick={()=>{
+      setOpenAddEditModal({
+        isShown:true,
+        type:"add",
+        data:null
+      })
+    }}>
       <MdAdd className='text-[32px] text-white'/>
     </button>
-    {/* {addModal && <AddNotes 
-      setAddModal={setAddModal}
-    />} */}
+    {/* creating add modal */}
+    <Modal isOpen={openAddEditModal.isShown} onRequestClose={()=>{}} 
+    style={{
+      overlay:{
+        backgroundColor:"rgba(0, 0, 0, 0.2)"
+      }
+    }}
+    contentLabel=''
+    >
+
+    </Modal>
     </>
   )
 }
