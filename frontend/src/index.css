@@ -24,3 +24,21 @@
     @apply text-xs text-slate-400; 
   }
 }
+
+@layer utilities {
+  /* Scrollbar Track */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px; /* Adjust width */
+  }
+
+  /* Scrollbar Thumb (the draggable part) */
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #4a90e2; /* Change color */
+    border-radius: 4px;
+  }
+
+  /* Scrollbar Track Background */
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+}
