@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import {MdClose} from 'react-icons/md'
+import TagInput from '../../components/input/TagInput'
 
 const AddEditNotes = ({onClose, noteData, type}) => {
   const[title, setTitle] = useState("")
   const[content, setContent] = useState("")
-  const[tags, setTage] = useState([])
+  const[tags, setTags] = useState(['Natasha', "priyanshi"])
   const[error, setError] = useState("")
 
   const editNote = async() => {}
@@ -71,12 +72,15 @@ const AddEditNotes = ({onClose, noteData, type}) => {
         </div>
         {/* Design for the tags */}
         <div className=''>
-          <label className='input-label text-red-400 uppercase'></label>
-          {/* <TagInput /> */}
+          <label className='input-label text-red-400 uppercase'>Tags</label>
+          <TagInput 
+            tags={tags}
+            setTags={setTags}
+          />
         </div>
 
         {/* design for the add button */}
-        <div className='btn-[#2B85FF] font-medium mt-5 p-3' onClick={handleAddNote}>
+        <div className='btn-primary font-medium mt-5 p-3' onClick={handleAddNote}>
           + ADD
         </div>
     </div>
