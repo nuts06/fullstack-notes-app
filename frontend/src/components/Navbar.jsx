@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Searchbar from './Searchbar/Searchbar'
 import Profileinfo from './Cards/Profileinfo'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("")
@@ -22,10 +22,12 @@ const Navbar = () => {
   }
   return (
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
+      <Link to="/">
       <h2 className='text-xl font-medium text-black py-2'>
         <span className='text-slate-500'>Venus</span>
         <span className='text-slate-900'>Vibes</span>
       </h2>
+      </Link>
 
       <Searchbar 
         value={searchQuery}
