@@ -79,6 +79,8 @@ const AddEditNotes = ({onClose, noteData, type}) => {
           />
         </div>
 
+        {error && <p className='text-red-500 text-xs pt-4'>{error}</p>}
+
         {/* design for the add button */}
         <div className='btn-primary font-medium mt-5 p-3' onClick={handleAddNote}>
           + ADD
