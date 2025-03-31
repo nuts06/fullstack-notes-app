@@ -34,7 +34,7 @@ const AddEditNotes = ({onClose, noteData, type}) => {
     <div className='relative'>
       {/* Desgin for close button */}
         <button 
-          className='w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-50'
+          className='w-10 h-10 rounded-full flex items-center cursor-pointer justify-center absolute -top-3 -right-3 hover:bg-slate-50'
           onClick={onClose}
         >
           <MdClose 
