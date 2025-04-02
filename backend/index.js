@@ -3,7 +3,8 @@ import mongoose from "mongoose"
 import dotenv from "dotenv"
 
 
-// we have to config the dotenv before using it
+// Loads environment variables from a .env file into process.env.
+// Needed to securely store sensitive data like database credentials (MONGO_URI).
 dotenv.config()
 
 
@@ -19,4 +20,19 @@ const app = express()
 
 app.listen(3000, ()=>{
     console.log("Server is running on port 3000")
+})
+
+
+
+// global error handling middleware
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+
+    return res.status(statusCode).json({
+        success:false,
+        statusCode,
+        message
+    })
+    
 })
