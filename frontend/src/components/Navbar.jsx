@@ -16,6 +16,7 @@ const Navbar = () => {
   }
 
   const onLogout  = () =>{
+    localStorage.removeItem("token");
     navigate('/login')
     setButtontext("Login")
     
