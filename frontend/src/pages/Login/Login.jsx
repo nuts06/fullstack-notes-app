@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import Password from '../../components/input/Password'
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import { validateEmail } from '../../utils/helper'
+import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify'
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -9,6 +11,7 @@ const Login = () => {
   // const [error, setError] = useState("")
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
+  const navigate = useNavigate()
 
   const handleLogin = async(e) =>{
     e.preventDefault()
@@ -21,6 +24,33 @@ const Login = () => {
       setPasswordError("Please enter the password")
       return
     }
+    axios.post("http://localhost:3000/api/auth/login", {
+      email,
+      password
+    })
+    .then(response =>{
+      console.log("login response", response);
+      if(response.status === 200){
+        toast.success("Login Successful", {
+          position: 'top-right',
+          autoClose:3000
+        })
+        setEmail("")
+        setPassword("")
+        setTimeout(()=> navigate("/"), 3000)
+      }
+    })
+    .catch(err =>{
+      console.log("Login error", err);
+      if(err.response && err.response.status === 400)
+        alert(err.response.data.message)
+      else if(err.response && err.response.status === 401)
+        alert("Invalid credentials")
+      else
+        alert("Something went wrong")
+    })
+    setEmail("")
+    setPassword("")
 
     setPasswordError("")
     setEmailError("")
@@ -56,6 +86,7 @@ const Login = () => {
           <p className='text-sm text-center mt-4'>Not Registered Yet? {" "}<Link to={"/signup"} className='font-medium underline text-[#2B85FF]'>Create an account</Link></p>
         </form>
       </div>
+      <ToastContainer />
     </div>
     
   )
