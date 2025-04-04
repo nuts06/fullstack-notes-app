@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import Password from '../../components/input/Password'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { validateEmail } from '../../utils/helper'
+import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const Signup = () => {
   const [name, setName] = useState("")
@@ -10,6 +13,7 @@ const Signup = () => {
   const [nameError, setNameError] = useState("")
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState(" ")
+  const navigate = useNavigate()
   
   // handle signup
   const handleSignup = async(e)=>{
@@ -29,7 +33,33 @@ const Signup = () => {
       setPasswordError("Please enter the password")
       return
     }
-
+    axios.post("http://localhost:3000/api/auth/signup", {
+      name,
+      email,
+      password
+  })
+  .then(response => {
+      console.log("Signup response:", response);
+      if (response.status === 201) {
+        toast.success("Signup successful, Redirecting to login", {
+          position: "top-right",
+          autoClose: 3000, 
+        });
+        setName("");
+        setEmail("");
+        setPassword("");
+        setTimeout(() => navigate("/login"), 3000);
+      }
+  })
+  .catch(err => {
+      console.log("Signup error:", err);
+  
+      if (err.response && err.response.status === 400) {
+          alert(err.response.data.message);
+      } else {
+          alert("Something went wrong");
+      }
+  });
     setEmailError("")
     setNameError("")
     setPasswordError("")
@@ -77,10 +107,18 @@ const Signup = () => {
             />
             {passwordError&&<p className='text-sm text-red-500 mb-1'>{passwordError}</p>}
 
-            <button type='submit' disabled={!name || !email || !password} className={`btn-primary mt-4 h-10 ${(!email || !password) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>Signup</button>
+            <button 
+              onClick={handleSignup} 
+              disabled={!name || !email || !password} 
+              className={`btn-primary mt-4 h-10 
+              ${(!name || !email || !password) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
+              Signup
+            </button>
             <p className='text-center text-sm mt-4'>Already have an account?{" "}<Link to="/login" className='underline text-blue-500 font-medium'>Login Here</Link></p>
         </form>
       </div>
+        {/* Toast Container */}
+        <ToastContainer />
     </div>
   )
 }
