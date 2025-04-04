@@ -30,7 +30,9 @@ const Login = () => {
     })
     .then(response =>{
       console.log("login response", response);
-      if(response.status === 200){
+      if(response.data.success){
+        localStorage.setItem("token", response.data.token)
+        
         toast.success("Login Successful", {
           position: 'top-right',
           autoClose:3000
