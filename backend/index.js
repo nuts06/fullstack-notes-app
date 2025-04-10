@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import authRouter from "./routes/auth.route.js"
+import noteRouter from "./routes/note.route.js"
 
 dotenv.config()
 
@@ -28,6 +29,7 @@ app.listen(3000, ()=>{
 
 // import routes
 app.use("/api/auth", authRouter)
+app.use("/api/notes", noteRouter)
 
 
 // global error handling middleware
