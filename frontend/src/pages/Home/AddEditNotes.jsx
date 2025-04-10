@@ -1,16 +1,41 @@
 import React, { useState } from 'react'
 import {MdClose} from 'react-icons/md'
 import TagInput from '../../components/input/TagInput'
+import axios from 'axios'
 
-const AddEditNotes = ({onClose, noteData, type}) => {
+const AddEditNotes = ({onClose, noteData, type,  setNotes}) => {
   const[title, setTitle] = useState("")
   const[content, setContent] = useState("")
-  const[tags, setTags] = useState(['Natasha', "priyanshi"])
+  const[tags, setTags] = useState([])
   const[error, setError] = useState("")
 
   const editNote = async() => {}
 
-  const addNewNote = async() => {}
+  const addNewNote = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/notes/create-note", {
+        title,
+        content,
+        tags  
+      });
+  
+      console.log(res.data); // Debugging log
+  
+      if (res.data && res.data.success) {
+        setNotes((prevNotes) => [res.data.note, ...prevNotes]);
+        console.log("Note added successfully, now closing modal");
+        onClose();
+        console.log("Called onClose()");
+      } else {
+        console.error("Invalid response format:", res.data);
+      }
+      
+  
+    } catch (err) {
+      console.error("Error adding note:", err);
+    }
+  };
+  
 
   const handleAddNote = () =>{
     if(!title){
@@ -82,7 +107,7 @@ const AddEditNotes = ({onClose, noteData, type}) => {
         {error && <p className='text-red-500 text-xs pt-4'>{error}</p>}
 
         {/* design for the add button */}
-        <div className='btn-primary font-medium mt-5 p-3' onClick={handleAddNote}>
+        <div className='btn-primary font-medium mt-5 p-3 cursor-pointer' onClick={handleAddNote}>
           + ADD
         </div>
     </div>
