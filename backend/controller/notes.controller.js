@@ -1,6 +1,7 @@
 import Note from "../models/createnote.model.js";
+import {authMiddleware} from '../middlewares/authMiddleware.js';
 
-export const createNote = async(req, res) => {
+export const createNote = async(req, res, authMiddleware) => {
     try{
         const {title, content, tags} = req.body;
         if (!title || !content || !tags) {
@@ -13,7 +14,8 @@ export const createNote = async(req, res) => {
         const newNote = new Note({
             title,
             content,
-            tags
+            tags,
+            user: req.user.id,
         })
         await newNote.save();
         res.status(201).json({messgae:'Note Created Successfully', success: true, note: newNote})
@@ -21,15 +23,15 @@ export const createNote = async(req, res) => {
         res.status(500).json({message: err.message, success: false})
     }
 }
-
-export const getAllNotes = async(req, res) =>{
-    try{
-        const notes = await Note.find();
-        res.status(200).json({notes, success:true})
-    } catch(err){
-        res.status(500).json({message:err.message, success:false})
+export const getAllNotes = async (req, res) => {
+    try {
+        // Find notes associated with the logged-in user
+        const notes = await Note.find({ user: req.user.id });
+        res.status(200).json({ notes, success: true });
+    } catch (err) {
+        res.status(500).json({ message: err.message, success: false });
     }
-}
+};
 
 // DELETE: /api/notes/:id
 export const deleteNote = async (req, res) => {
