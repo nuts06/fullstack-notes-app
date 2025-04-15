@@ -15,7 +15,7 @@ export const createNote = async(req, res, authMiddleware) => {
             title,
             content,
             tags,
-            user: req.user.id,
+            user: req.user.user.id,
         })
         await newNote.save();
         res.status(201).json({messgae:'Note Created Successfully', success: true, note: newNote})
@@ -26,7 +26,7 @@ export const createNote = async(req, res, authMiddleware) => {
 export const getAllNotes = async (req, res) => {
     try {
         // Find notes associated with the logged-in user
-        const notes = await Note.find({ user: req.user.id });
+        const notes = await Note.find({ user: req.user.user.id });
         res.status(200).json({ notes, success: true });
     } catch (err) {
         res.status(500).json({ message: err.message, success: false });
