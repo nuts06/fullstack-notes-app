@@ -2,10 +2,40 @@ import React, {useState} from 'react'
 import Searchbar from './Searchbar/Searchbar'
 import Profileinfo from './Cards/Profileinfo'
 import { useNavigate, Link } from 'react-router-dom';
+import { useEffect} from 'react';
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("")
-  const [buttonText, setButtontext] = useState('Logout')
+  // const [buttonText, setButtontext] = useState('Logout')
+  const [name, setName] = useState('');
+
+  // useEffect(() => {
+  //   const storedName = localStorage.getItem("userName");
+  //   if (storedName) {
+  //     setName(storedName);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const storedName = localStorage.getItem("userName");
+    if (storedName) {
+      setName(storedName);
+    }
+  
+    // Listen for custom login event
+    const handleLogin = () => {
+      const updatedName = localStorage.getItem("userName");
+      setName(updatedName);
+    }
+  
+    window.addEventListener("userLoggedIn", handleLogin);
+  
+    return () => {
+      window.removeEventListener("userLoggedIn", handleLogin);
+    }
+  }, []);
+  
+
   const navigate = useNavigate()
   const handleSeacrh = ()=>{
     alert("Searched")
@@ -17,10 +47,13 @@ const Navbar = () => {
 
   const onLogout  = () =>{
     localStorage.removeItem("token");
-    navigate('/login')
-    setButtontext("Login")
-    
+    localStorage.removeItem("userName");
+    setName('');
+    navigate('/login');
   }
+
+  const buttonText = name ? 'Logout' : 'Login'
+
   return (
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
       <Link to="/">
@@ -37,6 +70,7 @@ const Navbar = () => {
         onClearSearch={onClearSearch}
       />
       <Profileinfo 
+        name={name}
         onLogout={onLogout}
         Buttontext={buttonText}
       />
