@@ -45,8 +45,10 @@ export const signup = async (req, res) => {
         console.log("New user to be saved:", newUser);
 
         await newUser.save();
+        console.log("User saved successfully.");
         res.status(201).json({ message: "User Created Successfully", success: true });
     } catch (err) {
+        console.error("Error in signup:", err);
         res.status(500).json({ message: "Internal server error", success: false });
     }
 };
@@ -57,10 +59,12 @@ export const login = async (req, res) => {
 
         // Check if user exists
         const user = await User.findOne({ email });
+        console.log("User found:", user);
+
         if (!user) {
             return res.status(400).json({ message: "User not found", success: false });
         }
-
+        
         // Check if password is correct
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
@@ -93,7 +97,7 @@ export const register = async (req, res) =>{
     if(!email){
         return res.status(400).json({error: "Email is required"})
     }
-    const existingUser = await User.findOne({ email });
+    let existingUser = await User.findOne({ email });
     if (existingUser) {
         return res.status(400).json({ message: "User already exists", success: false });
     }
@@ -112,36 +116,88 @@ export const register = async (req, res) =>{
     };
     try{
         await transporter.sendMail(mailOptions)
-        res.json({message: 'OTP sent' })
+        res.json({message: 'OTP sent', otp })
     } catch (error) {
         res.status(500).json({ error: 'Failed to send email', details: error });
       }
 }
 
-// POST /api/auth/verify-otp
-export const verifyOtp = (req, res) => {
+
+export const verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
-  
+
     const stored = otpStore.get(email);
     if (!stored) {
-      return res.status(400).json({ error: 'OTP not found for this email' });
+        return res.status(400).json({ error: 'OTP not found for this email' });
     }
-  
+
     const { otp: storedOtp, expiresAt } = stored;
-  
+
     if (Date.now() > expiresAt) {
-      otpStore.delete(email);
-      return res.status(400).json({ error: 'OTP expired' });
+        otpStore.delete(email);
+        return res.status(400).json({ error: 'OTP expired' });
     }
-  
+
     if (otp !== storedOtp) {
-      return res.status(400).json({ error: 'Invalid OTP' });
+        return res.status(400).json({ error: 'Invalid OTP' });
     }
-  
-    // If OTP is correct, mark email as verified
-    verifiedEmails.add(email); // You can use a Set or DB flag
-    otpStore.delete(email);
-  
-    return res.json({ message: 'OTP verified successfully', success: true });
-  };
-  
+
+    try {
+        // ✅ Find user by email
+         const newUser = new User({ email });
+        await newUser.save();
+
+        // ✅ Mark email as verified (if needed)
+        verifiedEmails.add(email);
+        otpStore.delete(email);
+
+        return res.json({
+            message: 'OTP verified successfully',
+            success: true,
+            userId: newUser._id, // 👈 Send userId to frontend
+        });
+    } catch (err) {
+        console.error('Error verifying OTP:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const personalDetails = async (req, res) => {
+    try {
+        const { userId, name, password, repassword, contact, country, state, city, postalcode } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required", success: false });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
+        }
+
+        if (password !== repassword) {
+            return res.status(400).json({ message: "Passwords do not match", success: false });
+        }
+
+        const updatedPassword = bcrypt.hashSync(password, 10);
+
+        // user.FirstName = FirstName || user.FirstName;
+        // user.LastName = LastName || user.LastName;
+        // user.fullname = fullName?.trim() || user.fullname;
+        user.name = name || user.name;
+        user.contact = contact || user.contact;
+        user.country = country || user.country;
+        user.state = state || user.state;
+        user.city = city || user.city;
+        user.postalcode = postalcode || user.postalcode;
+        user.password = updatedPassword;
+
+        await user.save();
+
+        res.status(200).json({ message: "Personal details updated successfully", success: true });
+
+    } catch (error) {
+        console.error("Error updating personal details:", error);
+        res.status(500).json({ message: "Internal server error", success: false });
+    }
+};
