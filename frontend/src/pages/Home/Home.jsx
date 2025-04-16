@@ -48,8 +48,15 @@ const Home = () => {
   };
   
   const getAllNotes = () =>{
+    const token = localStorage.getItem("token");
       axios
-        .get("http://localhost:3000/api/notes/get-all-notes")
+        .get("http://localhost:3000/api/notes/get-all-notes", 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,  // Add 'Bearer' prefix
+            },
+          }
+        )
         .then((res) => {
           console.log("API Response:", res.data); // Debugging log
     
