@@ -42,3 +42,73 @@
     background: #f1f1f1;
   }
 }
+::-webkit-scrollbar{
+  @apply hidden
+}
+
+
+.custom-phone-input {
+  width: 100% !important;
+  padding: 1.75rem 0.75rem 1rem 48px !important; /* ⬆️ increased top/bottom padding */
+  background-color: transparent !important;
+  color: white !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 0.5rem !important;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Flag dropdown area */
+.react-tel-input .flag-dropdown {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Flag container */
+.react-tel-input .selected-flag {
+  background-color: transparent !important;
+}
+
+/* Country list dropdown */
+.react-tel-input .country-list {
+  background-color: transparent !important;
+  border: 1px solid #d1d5db !important;
+  color: white !important;
+  backdrop-filter: blur(8px); /* optional: makes it look frosty and fancy */
+}
+
+/* Individual list items */
+.react-tel-input .country-list .country {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+/* On hover — make it subtle */
+.react-tel-input .country-list .country:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+
+/* Style all select elements */
+select {
+  appearance: none; /* Remove default browser arrow */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); /* White arrow */
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: 1.2rem;
+}
+
+/* Style the dropdown menu options */
+select option {
+  background-color: #1f2937; /* bg-gray-800 */
+  color: white;
+}
+
+
+/* Firefox */
+select:-moz-focusring,  
+select option {
+  background-color: #1f2937; /* bg-gray-800 */
+  color: white;
+}
+
