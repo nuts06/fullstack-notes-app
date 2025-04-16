@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6"
 
+
 const Password = ({password, setPassword, onChange}) => {
     const [isShowPassword, setIsShowPassword] = useState(false)
     const eyeChange = () =>{
@@ -12,7 +13,7 @@ const Password = ({password, setPassword, onChange}) => {
         <input 
             type={isShowPassword ? "text" : "password"} 
             placeholder='Enter your password' 
-            className='w-full text-sm bg-transparent py-3 mr-3 rounded outline-none' 
+            className="w-full p-3 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
             value={password}
             onChange={onChange}
           />
