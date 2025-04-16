@@ -12,12 +12,19 @@ const AddEditNotes = ({onClose, noteData, type,  setNotes}) => {
   const editNote = async() => {}
 
   const addNewNote = async () => {
+    const token = localStorage.getItem("token");
     try {
       const res = await axios.post("http://localhost:3000/api/notes/create-note", {
         title,
         content,
         tags  
-      });
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Add 'Bearer' prefix
+        },
+      }
+    );
   
       console.log(res.data); // Debugging log
   
