@@ -83,7 +83,7 @@ export const login = async (req, res) => {
             message: "Login successful",
             success: true,
             token, // Send token to frontend
-            user: { id: user._id, name: user.name, email: user.email } // Send user details
+            user: { id: user._id, name: user.name || '', email: user.email } // Send user details
         });
 
     } catch (error) {
@@ -194,10 +194,54 @@ export const personalDetails = async (req, res) => {
 
         await user.save();
 
-        res.status(200).json({ message: "Personal details updated successfully", success: true });
+        res.status(200).json({ message: "Personal details updated successfully", success: true,  user: {
+            id: user._id,
+            name: user.name,
+            // email: user.email,
+            // contact: user.contact,
+            // country: user.country,
+            // state: user.state,
+            // city: user.city,
+            // postalcode: user.postalcode,
+          } });
 
     } catch (error) {
         console.error("Error updating personal details:", error);
+        res.status(500).json({ message: "Internal server error", success: false });
+    }
+};
+
+
+export const getPersonalDetails = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required", success: false });
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
+        }
+
+        res.status(200).json({
+            message: "Personal details fetched successfully",
+            success: true,
+            user: {
+                id: user._id,
+                name: user.name,
+                contact: user.contact,
+                country: user.country,
+                state: user.state,
+                city: user.city,
+                postalcode: user.postalcode,
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching personal details:", error);
         res.status(500).json({ message: "Internal server error", success: false });
     }
 };
