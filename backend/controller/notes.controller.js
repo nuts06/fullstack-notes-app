@@ -50,3 +50,31 @@ export const deleteNote = async (req, res) => {
     }
   };
   
+
+//   search-api
+// GET: /api/notes/search?q=yourQuery
+export const searchNotes = async (req, res) => {
+    try {
+        const { q } = req.query;
+
+        if (!q) {
+            return res.status(400).json({ message: "Search query is required", success: false });
+        }
+
+        // Case-insensitive regex search in title, co   ntent or tags
+        const regex = new RegExp(q      , 'i'); // 'i' for case-insensitive
+
+        const notes = await Note.find({
+            user: req.user.user.id, // Ensure search is scoped to logged-in user
+            $or: [
+                { title: regex },
+                { content: regex },
+                { tags: { $in: [regex] } }
+            ]
+        });
+
+        res.status(200).json({ notes, success: true });
+    } catch (err) {
+        res.status(500).json({ message: err.message, success: false });
+    }
+};
