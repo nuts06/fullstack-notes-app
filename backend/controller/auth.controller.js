@@ -111,7 +111,23 @@ export const register = async (req, res) =>{
         from: process.env.EMAIL,
         to: email,
         subject: 'Your OTP Code',
-        text: `Your OTP is ${otp}`
+        html: `
+        <html>
+        <body>
+            <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 30px;">
+                <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <h2 style="color: #333;">Greetings!!</h2>
+                    <p style="font-size: 16px;">Use the OTP below to complete your verification process:</p>
+                    <div style="font-size: 24px; font-weight: bold; letter-spacing: 2px; background-color: #f0f0f0; padding: 15px; text-align: center; border-radius: 6px; margin: 20px 0;">
+                        ${otp}
+                    </div>
+                    <p style="font-size: 14px; color: #555;">This OTP is valid for the next 10 minutes. Please do not share it with anyone.</p>
+                    <p style="margin-top: 30px;">Thanks & regards,<br><strong>VenusVibes</strong></p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `
     
     };
     try{
@@ -180,10 +196,6 @@ export const personalDetails = async (req, res) => {
         }
 
         const updatedPassword = bcrypt.hashSync(password, 10);
-
-        // user.FirstName = FirstName || user.FirstName;
-        // user.LastName = LastName || user.LastName;
-        // user.fullname = fullName?.trim() || user.fullname;
         user.name = name || user.name;
         user.contact = contact || user.contact;
         user.country = country || user.country;
@@ -197,12 +209,6 @@ export const personalDetails = async (req, res) => {
         res.status(200).json({ message: "Personal details updated successfully", success: true,  user: {
             id: user._id,
             name: user.name,
-            // email: user.email,
-            // contact: user.contact,
-            // country: user.country,
-            // state: user.state,
-            // city: user.city,
-            // postalcode: user.postalcode,
           } });
 
     } catch (error) {
@@ -215,6 +221,7 @@ export const personalDetails = async (req, res) => {
 export const getPersonalDetails = async (req, res) => {
     try {
         const { userId } = req.params;
+        console.log("User ID from params:", userId);
 
         if (!userId) {
             return res.status(400).json({ message: "User ID is required", success: false });
@@ -231,7 +238,7 @@ export const getPersonalDetails = async (req, res) => {
             success: true,
             user: {
                 id: user._id,
-                name: user.name,
+                email:user.email,
                 contact: user.contact,
                 country: user.country,
                 state: user.state,
@@ -243,5 +250,48 @@ export const getPersonalDetails = async (req, res) => {
     } catch (error) {
         console.error("Error fetching personal details:", error);
         res.status(500).json({ message: "Internal server error", success: false });
+    }
+};
+
+
+export const resetPassword = async (req, res) => {
+    try {
+        const { userId, currentPassword, newPassword, confirmPassword } = req.body;
+
+        if (!userId || !currentPassword || !newPassword || !confirmPassword) {
+            return res.status(400).json({ message: "All fields are required", success: false });
+        }
+
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ message: "New passwords do not match", success: false });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found", success: false });
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Current password is incorrect", success: false });
+        }
+
+        // Hash and update new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await User.updateOne(
+        { _id: userId },
+        { $set: { password: hashedPassword } }
+        );
+
+        // Optional: log to check if update worked
+        const updatedUser = await User.findById(userId);
+        console.log("Updated password hash:", updatedUser.password);
+
+
+        return res.status(200).json({ message: "Password reset successful", success: true });
+    } catch (err) {
+        console.error("Error in resetPassword:", err);
+        return res.status(500).json({ message: "Internal server error", success: false });
     }
 };
