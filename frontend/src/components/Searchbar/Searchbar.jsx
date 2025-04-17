@@ -3,7 +3,16 @@ import {FaMagnifyingGlass} from "react-icons/fa6"
 import {IoMdClose} from "react-icons/io"
 
 
-const Searchbar = ({value, onChange, handleSeacrh, onClearSearch}) => {
+const Searchbar = ({value, onChange, handleSearch , onClearSearch}) => {
+    const handleSearchClick = () => {
+        // Trim the value before calling the search function
+        const trimmedQuery = value.trim();
+    
+        // Only call handleSearch if the trimmed query is not empty
+        if (trimmedQuery) {
+          handleSearch(trimmedQuery);
+        }
+      };
   return (
     <div className='w-40 sm:w-60 md:w-80 flex items-center px-4 bg-slate-100 rounded-md'>
         <input 
@@ -21,7 +30,7 @@ const Searchbar = ({value, onChange, handleSeacrh, onClearSearch}) => {
         }
         <FaMagnifyingGlass 
             className='text-slate-500 text-xl cursor-pointer hover:text-black mr-3'
-            onClick={handleSeacrh}
+            onClick={handleSearchClick}
         />
     </div>
   )
