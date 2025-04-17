@@ -7,6 +7,7 @@ import axios from 'axios'
 
 const Home = () => {
   const [notes, setNotes] = useState([])  
+  const [searchQuery, setSearchQuery] = useState('');
   const [openAddEditModal, setOpenAddEditModal] = useState({
     isShown: false,
     type:'add',
@@ -23,6 +24,13 @@ const Home = () => {
   const handleEdit = () =>{
     alert("Created")
   }
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+  
+  const onClearSearch = () => {
+    setSearchQuery('');
+  };
 
   // on delete
   const handleDelete = async (noteId) => {
@@ -83,23 +91,33 @@ const Home = () => {
     <>
     <div className='container mx-auto'>
       <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-8 max-md:m-5'>
-      {notes.length > 0 ? (
-            notes.map((note) => (
-              <Notecard
-                key={note?._id ||  Math.random()} // Unique key for each note
-                handlePinNote={() => handlePinNote(note?._id)}
-                handleEdit={() => handleEdit(note)}
-                handleDelete={() => handleDelete(note?._id)}
-                content={note?.content}
-                tags={note?.tags}
-                title={note?.title}
-                date={note?.date}
-                isPinned={note?.isPinned || false} // Assuming API has `isPinned` field
-              />
-            ))
-          ) : (
-            <p>No notes found</p>
-          )}
+      {notes.filter(note =>
+  note.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  note.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  note.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+).length > 0 ? (
+  notes
+    .filter(note =>
+      note.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      note.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      note.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
+    .map((note) => (
+      <Notecard
+        key={note?._id || Math.random()}
+        handlePinNote={() => handlePinNote(note?._id)}
+        handleEdit={() => handleEdit(note)}
+        handleDelete={() => handleDelete(note?._id)}
+        content={note?.content}
+        tags={note?.tags}
+        title={note?.title}
+        date={note?.date}
+        isPinned={note?.isPinned || false}
+      />
+    ))
+) : (
+  <p>No notes found</p>
+)}
       </div>
     </div>
      {/* add button */}
